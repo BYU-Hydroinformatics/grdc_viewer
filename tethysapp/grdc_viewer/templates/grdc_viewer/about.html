@@ -1,0 +1,55 @@
+{% extends "grdc_viewer/base.html" %}
+{% load tethys_gizmos %}
+{% load staticfiles %}
+
+{% block header_buttons %}
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+  </div>
+{% endblock %}
+
+{% block app_content %}
+ <h1>About the Author!</h1>
+  <h5><b><a href="https://www.linkedin.com/in/jorge-luis-sanchez-lozano-27866a89/?locale=en_US">Jorge Luis Sanchez-Lozano</a></b></h5>
+  <img src="{% static 'grdc_viewer/images/Jorge_photo.jpeg' %}" width="500" height="377">
+  <p>Jorge Luis Sanchez-Lozano is a Civil Engineering PhD Student with emphasis in Water Resources</a>
+    at <a href="https://www.byu.edu/" target="_blank">Brigham Young University</a>.</p>
+  <p>If you have any question about the app, you can write an email to <a href="mailto:jorgessanchez7@gmail.com?subject= About The GRDC Viewer" target="_blank"> jorgessanchez7@gmail.com</a>.</p>
+{% endblock %}
+
+{# Use the after_app_content block for modals #}
+{% block after_app_content %}
+    <!-- Help Modal -->
+    <div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h1 class="modal-title" id="help-modal-label">Instructions</h1>
+          </div>
+          <div class="modal-body">
+            <h2>Select Continent</h2>
+            <ul>
+              <li>Click the "Select Continent" dropdown and select the continent of interest. The map will display the continent and its streams.</li>
+            </ul>
+            <h2>Select Country</h2>
+            <ul>
+              <li>Click the "Select Country" dropdown and select the desired country. The data for the specified country will appear on the map.</li>
+            </ul>
+            <h2>Click on individual station</h2>
+            <ul>
+              <li>When clicked, each station will display timeseries data and well metadata.</li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block app_actions %}
+
+{% endblock %}

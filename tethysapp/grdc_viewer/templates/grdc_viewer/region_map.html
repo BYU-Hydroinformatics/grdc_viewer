@@ -1,0 +1,147 @@
+{% extends "grdc_viewer/base.html" %}
+{% load tethys_gizmos %}
+{% load staticfiles %}
+
+{% block import_gizmos %}
+    {% import_gizmo_dependency plotly_view %}
+{% endblock %}
+
+{% block header_buttons %}
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="View Graph">
+    <a data-toggle="modal" data-target="#obsgraph"><span class="glyphicon glyphicon-globe"></span></a>
+  </div>
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+  </div>
+{% endblock %}
+
+{% block app_content %}
+  <div id="showMapView" style="height: 100%, width: 100%"></div>
+{% endblock %}
+
+{% block app_navigation_items %}
+    {% url 'grdc_viewer:home' as home %}
+    {% url 'grdc_viewer:region_map' as region_map %}
+    {% url 'grdc_viewer:about' as about %}
+
+    <li class="{% if request.path == home %}active{% endif %}"><a href="{% url 'grdc_viewer:home' %}">Home</a></li>
+    <li class="{% if request.path == region_map %}active{% endif %}"><a href="{% url 'grdc_viewer:region_map' %}">Region Map</a></li>
+    <br>
+    {% gizmo select_input select_continent %}
+    {% gizmo select_input select_country %}
+    <div id="waiting_output"></div><br>
+    <li class="{% if request.path == about %}active{% endif %}"><a href="{% url 'grdc_viewer:about' %}">About</a></li>
+
+{% endblock %}
+
+{# Use the after_app_content block for modals #}
+{% block after_app_content %}
+  <!----Observed Data ----->
+  <div class="modal fade" id="obsgraph" tabindex="-1" role="dialog" aria-labelledby="about-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <div class="row">
+            <div id="station-info" class="col-md-8"></div>
+            <div class="col-md-4">
+              <div align="right">
+                <img class="obslogos" src="{% static 'grdc_viewer/images/byu_logo.png' %}">
+                <img class="obslogos" src="{% static 'grdc_viewer/images/logo.png' %}">
+              </div>
+            </div>
+            <div id="interaction"></div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a id="dailyData_tab_link" href="#dailyData" aria-controls="dailyData" role="tab" data-toggle="tab">Daily Streamflow</a></li>
+            <li role="presentation"><a id="monthlyData_tab_link" href="#monthlyData" aria-controls="monthlyData" role="tab" data-toggle="tab">Monthly Streamflow</a></li>
+            <li role="presentation"><a href="#download_dataHsen" aria-controls="download_dataHsen" role="tab" data-toggle="tab">Download</a></li>
+          </ul>
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="dailyData">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="flex-container-row"><img id="dailyData-loading" class="view-file hidden" src="{% static 'grdc_viewer/images/loader.gif' %}" /></div>
+                  <div id="dailyData-chart"></div>
+                </div>
+              </div>
+           </div>
+           <div role="tabpanel" class="tab-pane" id="monthlyData">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="flex-container-row"><img id="monthlyData-loading" class="view-file hidden" src="{% static 'grdc_viewer/images/loader.gif' %}" /></div>
+                  <div id="monthlyData-chart"></div>
+                </div>
+              </div>
+           </div>
+           <div role="tabpanel" class="tab-pane" id="download_dataHsen">
+             <div class="panel panel-default">
+               <div class="panel-body">
+                 <h6>Download Daily Streamflow</h6>
+                 <div id="download_dailyData" class="btn-group long-term-select" role="group">
+                   <a class="btn btn-success" role="button" id="submit-download-dailyData">
+                    <span class="glyphicon glyphicon-play"></span> Daily Observed Streamflow
+                   </a>
+                 </div>
+                 <h6>Download Monthly Streamflow</h6>
+                 <div id="download_monthlyData" class="btn-group long-term-select" role="group">
+                   <a class="btn btn-info" role="button" id="submit-download-monthlyData">
+                    <span class="glyphicon glyphicon-play"></span> Monthly Observed Streamflow
+                   </a>
+                 </div>
+               </div>
+             </div>
+           </div>
+          </div>
+        </div>
+        <div id="info" class="hidden"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h1 class="modal-title" id="help-modal-label">Instructions</h1>
+          </div>
+          <div class="modal-body">
+            <h2>Select Continent</h2>
+            <ul>
+              <li>Click the "Select Continent" dropdown and select the continent of interest. The map will display the continent and its streams.</li>
+            </ul>
+            <h2>Select Country</h2>
+            <ul>
+              <li>Click the "Select Country" dropdown and select the desired country. The data for the specified country will appear on the map.</li>
+            </ul>
+            <h2>Click on individual station</h2>
+            <ul>
+              <li>When clicked, each station will display timeseries data and well metadata.</li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block app_actions %}
+
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="{% static 'grdc_viewer/js/region_map.js' %}" type="text/javascript"></script>
+{% endblock %}

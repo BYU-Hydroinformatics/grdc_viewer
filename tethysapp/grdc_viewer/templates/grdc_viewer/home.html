@@ -1,0 +1,67 @@
+{% extends "grdc_viewer/base.html" %}
+{% load tethys_gizmos %}
+{% load staticfiles %}
+
+{% block header_buttons %}
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+  </div>
+{% endblock %}
+
+{% block app_content %}
+  <h1>Welcome to the Global Runoff Data Centre (GRDC) Viewer!</h1>
+  <p class="author"><b>Author:</b> Jorge Luis Sanchez-Lozano</p>
+  <p class="project">This App is part of the final project for the 542-Web Development class at Brigham Young University.</p>
+  <img src="{% static 'grdc_viewer/images/Observation Stations.PNG' %}" width="600" height="377">
+  <br>
+  <span class="caption">GRDC stations</span>
+  <br><br>
+  <p>The <a href="https://www.bafg.de/GRDC/EN/Home/homepage_node.html" target="_blank">GRDC</a> is an international archive
+    of data up to 200 years old, and fosters multinational and global long-term hydrological studies. Originally established
+    three decades ago, the aim of the GRDC is to help earth scientists analyse global climate trends and assess environmental
+    impacts and risks. Operating under the auspices of <a href="https://public.wmo.int/en" target="_blank">World Meteorological
+      Organization</a> (WMO) the database of quality controlled “historical” mean daily and monthly discharge data grows
+    steadily and currently comprises river discharge data of more than 9500 stations from 161 countries.</p>
+  <p> The exchange of hydrological data and information on a global scale is the principal reason for operating GRDC. National
+    Hydrological and Hydro-Meteorological Services as primary providers of river discharge data and associated metadata and the
+    scientific research community utilising this unique data collection are partners connected by GRDC. Positioned as a facilitator
+    for exchanges between data providers and data users, the GRDC has become a focal point for international cooperation. Researchers,
+    universities and other organisations make use of the facilities available for research programmes and projects.</p>
+{% endblock %}
+
+{# Use the after_app_content block for modals #}
+{% block after_app_content %}
+    <!-- Help Modal -->
+    <div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h1 class="modal-title" id="help-modal-label">Instructions</h1>
+          </div>
+          <div class="modal-body">
+            <h2>Select Continent</h2>
+            <ul>
+              <li>Click the "Select Continent" dropdown and select the continent of interest. The map will display the continent and its streams.</li>
+            </ul>
+            <h2>Select Country</h2>
+            <ul>
+              <li>Click the "Select Country" dropdown and select the desired country. The data for the specified country will appear on the map.</li>
+            </ul>
+            <h2>Click on individual station</h2>
+            <ul>
+              <li>When clicked, each station will display timeseries data and well metadata.</li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block app_actions %}
+
+{% endblock %}
